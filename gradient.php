@@ -55,13 +55,11 @@
         private function calculateTableArray() {
             $a = range(0, 100, 100 / $this->divider);
             $b = array_map(fn($value): int => round($value), $a);
-            print_r($a);
             $i = count($b) - 1;
 
             $full_range = [];
             $j = 0;
             foreach($b as $key => $value) {
-                echo "$key,";
                 if($key < $i) {
                     $percentage_diff = $b[$key + 1] - $b[$key]; // qty of steps between values
                     $temp = []; // huh? w...
@@ -257,7 +255,6 @@
          * @return String
          */
         private function hexSingleToDouble(String $v) {
-            //echo "{$v}{$v}";
             return $v.$v;
         }
 
@@ -288,7 +285,9 @@
             $percent = str_replace("%", "", $percent);
             $percent = intval($percent);
             $index = $percent;
-            if($percent >= 1) $index = 0;
+                if($percent < 1)   { $index = 0;   } 
+            elseif($percent > 100) { $index = 100; }
+
             if($returnAsArray) {
                 return $this->range[$index];
             } else {
@@ -305,12 +304,4 @@
     Class PercentageMix {
 
     }
-
-    $test = new GradientValues(); 
-    $test->assignValues(["15,31,64", "128,0,50,34%", "187,187, 187,41%", "255,55,111,0.54"]);
-    echo $test->result("100");
-
-    //print_r($test->valuesRGB);
-    //print_r($test->range);
-    //echo array_key_last($test->valuesRGB);
 ?>
