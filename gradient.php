@@ -11,14 +11,26 @@
         private $table = [];
         private $stopsCount = 0;
         private $divider = 0;
+
+        private $default = [
+            'heatmap' => ["000", "00f", "0ff", "0f0", "ff0", "f00", "fff"],
+            'rgb'     => ["f00", "f80", "ff0", "8f0", "0f0", "0f8", '0ff', '08f', "00f", "80f", "f0f", "#f08", "#f00"]
+        ];
         
         /**
          * Class constructor.
          *
          * @param Array|null $values
          */
-        public function __construct(Array $values = null) {
-            if(is_array($values)) {
+        public function __construct($values = null) {
+            if(is_string($values)) {
+                if(key_exists($values, $this->default)) {
+                    $this->assignValues($this->default[$values]);
+                } else {
+                    return false;
+                }
+            }
+            elseif(is_array($values)) {
                 if($this->assignValues($values) !== false) {
                     $this->calculateConfig();
                     $this->calculateTableArray();
@@ -74,6 +86,12 @@
                         'a' => abs($next['a'] - $actual['a']) / $percentage_diff
                     ]; // difference of values between channels (per step)
                     
+                    foreach($channel_step as $channel => $step) {
+                        if($step == 0) {
+                            $channel_step[$channel] = 1;
+                        }
+                    } // account for lacking steps if channel value stays the same
+
                     $range = [];
                     $range = [
                         'r' => range($actual['r'], $next['r'], $channel_step['r']),
@@ -82,8 +100,23 @@
                         'a' => range($actual['a'], $next['a'], $channel_step['a'])
                     ]; // generating table with range of values between steps (per step)
 
+                    foreach($range as $channel => $values) {
+                        if(count($range[$channel]) == 1) {
+                            for($k = 0; $k <= $percentage_diff; $k++) {
+                                $range[$channel][$k] = $range[$channel][0];
+                            }
+                        }else{
+                            $c = count($range[$channel]);
+                            if($c != $percentage_diff + 1) {
+                                $dif = abs($percentage_diff - $c);
+                                for($k = $c; $k <= $percentage_diff; $k++) {
+                                    $range[$channel][$k] = $range[$channel][array_key_last($range[$channel])];
+                                }
+                            } // and this is some fix without which it won't work properly... just don't know why...
+                        }
+                    } // account for lacking steps when $channel_step == 0
+
                     $range_merged = [];
-                    
                     foreach($range['r'] as $rKey => $doesntMatter) {
                         $range_merged[$rKey] = [
                             'r' => round($range['r'][$rKey]),
@@ -92,7 +125,7 @@
                             'a' => $range['a'][$rKey]
                         ];
                     } // merging channels for each step
-                    
+
                     if($j > 0) {
                         unset($range_merged[0]);
                     } // removing first key if iteration is higher than 0 (to avoid doubling of values)
@@ -118,8 +151,18 @@
          * @param Array $values
          * @return GradientValues|Boolean
          */
-        public function assignValues(Array $values) {
-            if(is_array($values)) {
+        public function assignValues($values) {
+            if(is_string($values)) {
+                if(key_exists($values, $this->default)) {
+                    $this->assignValues($this->default[$values]);
+                    $this->calculateConfig();
+                    $this->calculateTableArray();
+                return $this;
+                } else {
+                    return false;
+                }
+            }
+            elseif(is_array($values)) {
                 $this->values = $values;
                 $this->calculateConfig();
                 $this->calculateTableArray();
@@ -162,11 +205,17 @@
                 $len = strlen($value);
                 if($len == 3 OR $len == 4) {
                     // rgb(a)
+                    if($len == 3) {
+                        $value .= "f";
+                    }
                     $temp1 = str_split($value, 1);
                     $value_parts = array_map(array($this, 'hexSingleToDouble'), $temp1);
                     $temp1 = null;
                     unset($temp1);
                 } elseif ($len == 6 or $len == 8) {
+                    if($len == 6) {
+                        $value .= "ff";
+                    }
                     $value_parts = str_split($value, 2);
                 } else {
                     // not proper transcription: must be 3/4 chars or 6/8 chars
@@ -185,6 +234,8 @@
                         $value_parts[3] = 100;
                     }
                     $alpha = $value_parts[3] / 100;
+                } else {
+                    $alpha = 1;
                 }
             } else {
                 // if decimal
@@ -230,6 +281,8 @@
             if(isset($alpha)) {
                 //$value_parts[3] = $alpha;
                 $rgba['a'] = $alpha;
+            } else {
+                $rgba['a'] = 1;
             }
             
             //return $value_parts;
