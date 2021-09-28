@@ -18,7 +18,7 @@
          *
          * @var array
          */
-        private $valuesRGB = [];
+        public $valuesRGB = [];
         /**
          * Holds full gradient data.
          *
