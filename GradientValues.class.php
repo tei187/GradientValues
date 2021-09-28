@@ -3,15 +3,47 @@
      * GradientValues
      * 
      * Class used to generate gradient for intensification display purposes (ticks per hour, hits by day, etc).
+     * @author Piotr Bonk <bonk.piotr@gmail.com>
+     * @license MIT
      */
     Class GradientValues {
+        /**
+         * Holds input values for processing.
+         *
+         * @var array
+         */
         private $values = [];
-        public $valuesRGB = [];
+        /**
+         * Holds processed values.
+         *
+         * @var array
+         */
+        private $valuesRGB = [];
+        /**
+         * Holds full gradient data.
+         *
+         * @var array
+         */
         public $range = [];
-        private $table = [];
+        /**
+         * Some counter.
+         *
+         * @var integer
+         */
         private $stopsCount = 0;
+        /**
+         * Some other counter.
+         *
+         * @var integer
+         */
         private $divider = 0;
 
+        /**
+         * Holds preset gradients
+         * @todo Expand on standard gradients.
+         *
+         * @var array
+         */
         private $default = [
             'heatmap' => ["000", "00f", "0ff", "0f0", "ff0", "f00", "fff"],
             'rgb'     => ["f00", "f80", "ff0", "8f0", "0f0", "0f8", '0ff', '08f', "00f", "80f", "f0f", "#f08", "#f00"]
@@ -60,9 +92,9 @@
         }
 
         /**
-         * Undocumented function
+         * Calculates entire table for the full gradient.
          *
-         * @return void
+         * @return Array
          */
         private function calculateTableArray() {
             $a = range(0, 100, 100 / $this->divider);
@@ -112,7 +144,7 @@
                                 for($k = $c; $k <= $percentage_diff; $k++) {
                                     $range[$channel][$k] = $range[$channel][array_key_last($range[$channel])];
                                 }
-                            } // and this is some fix without which it won't work properly... just don't know why...
+                            } // ...and this is some fix without which it just won't work properly on occassion... just don't know why or where the issue happens (probably range rounding)...
                         }
                     } // account for lacking steps when $channel_step == 0
 
@@ -347,14 +379,60 @@
                 return "rgba(".implode(",", $this->range[$index]).")";
             }
         }
-    }
 
-    /**
-     * PercentageMix
-     * 
-     * Meant to help with percentage calculations.
-     */
-    Class PercentageMix {
+        /**
+         * Renders entire gradient bar.
+         *
+         * @param Array $containerAttributes Array with container attributes.
+         * @param Array $cellAttributes Array with cell attributes.
+         * @param Boolean $echo Flag. If true, echoes returning void or if false returns HTML. Default false.
+         * @return void|String HTML or echo.
+         */
+        public function renderBar(Array $containerAttributes, Array $cellAttributes, Bool $echo = false) {
+            $contAttr = null;
+            foreach($containerAttributes as $attribute => $value) {
+                $contAttr .= " {$attribute}='{$value}'";
+            }
 
+            $cellAttr = null;
+            foreach($cellAttributes as $attribute => $value) {
+                $cellAttr .= " {$attribute}='{$value}'";
+            }
+
+            $html = null;
+            $html .= "<div {$contAttr}>";
+            for($i = 0; $i <= 100; $i++) {
+                $html .= $this->renderCell($i, "div", $cellAttr);
+            }
+            $html .= "</div>";
+
+            if($echo) {
+                echo $html;
+                return;
+            }
+            return $html;
+        }
+
+        /**
+         * Renders single cell / object.
+         *
+         * @param Float $percent Specifies which percent to represent (rounds to Decimal).
+         * @param String $tag Specifies which tag to render.
+         * @param String|Array $cellAttributes Specifies which attributes should the tag have.
+         * @param String|null $content Specifies content inside the tag.
+         * @return String HTML.
+         */
+        public function renderCell(Float $percent, String $tag = "div", $cellAttributes = null, String $content = null) {
+            $percentRnd = round($percent);
+            $cellAttr = null;
+            if(is_array($cellAttributes)) {
+                foreach($cellAttributes as $attribute => $value) {
+                    $cellAttr .= " {$attribute}='{$value}'";
+                }
+            } elseif (is_string($cellAttributes)) {
+                $cellAttr = " ".$cellAttributes;
+            }
+            return "<{$tag} {$cellAttr} style='background-color: {$this->result($percentRnd)}'>{$content}</{$tag}>";
+        }
     }
 ?>
