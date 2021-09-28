@@ -1,4 +1,4 @@
-# GradietnValues CLASS
+# GradientValues CLASS
 ## Ultimate gradient generator you always wanted.
 ---
 
