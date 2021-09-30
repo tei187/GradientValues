@@ -1,6 +1,6 @@
 <html>
 <head>
-  <title>GradientValues class</title>
+  <title>GradientValues - default gradients</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
         html {
@@ -96,7 +96,7 @@
 <&quest;php
 
     $var = new GradientValues();
-    $var->assignValues("name");
+    $var->setValues("name");
     $var->renderBar();
 
 &quest;>
@@ -105,36 +105,36 @@
 <h3 style='padding-top: 3em'>Default:</h3>
 <ul>
 <?
-        echo "<li><h4>heatmap</h4>".$test->assignValues("heatmap")->renderBar(['class' => 'containment'], ['class' => 'step'])."</li>";
-        echo "<li><h4>rgb</h4>".$test->assignValues("rgb")->renderBar(['class' => 'containment'], ['class' => 'step'])."</li>";
-        echo "<li><h4>red</h4>".$test->assignValues("red")->renderBar(['class' => 'containment'], ['class' => 'step'])."</li>";
-        echo "<li><h4>green</h4>".$test->assignValues("green")->renderBar(['class' => 'containment'], ['class' => 'step'])."</li>";
-        echo "<li><h4>blue</h4>".$test->assignValues("blue")->renderBar(['class' => 'containment'], ['class' => 'step'])."</li>";
-        echo "<li><h4>b/w</h4>".$test->assignValues("b/w")->renderBar(['class' => 'containment'], ['class' => 'step'])."</li>";
-        echo "<li><h4>gray</h4>".$test->assignValues("gray")->renderBar(['class' => 'containment'], ['class' => 'step'])."</li>";
+        echo "<li><h4>heatmap</h4>".$test->setValues("heatmap")->renderBar(['class' => 'containment'], ['class' => 'step'])."</li>";
+        echo "<li><h4>rgb</h4>".$test->setValues("rgb")->renderBar(['class' => 'containment'], ['class' => 'step'])."</li>";
+        echo "<li><h4>red</h4>".$test->setValues("red")->renderBar(['class' => 'containment'], ['class' => 'step'])."</li>";
+        echo "<li><h4>green</h4>".$test->setValues("green")->renderBar(['class' => 'containment'], ['class' => 'step'])."</li>";
+        echo "<li><h4>blue</h4>".$test->setValues("blue")->renderBar(['class' => 'containment'], ['class' => 'step'])."</li>";
+        echo "<li><h4>b/w</h4>".$test->setValues("b/w")->renderBar(['class' => 'containment'], ['class' => 'step'])."</li>";
+        echo "<li><h4>gray</h4>".$test->setValues("gray")->renderBar(['class' => 'containment'], ['class' => 'step'])."</li>";
 ?>
 </ul>
 <h3 style='padding-top: 3em'>Mixed:</h3>
 <ul>
 <?
-        echo "<li><h4>orange</h4>".$test->assignValues("orange")->renderBar(['class' => 'containment'], ['class' => 'step'])."</li>";
-        echo "<li><h4>violet</h4>".$test->assignValues("violet")->renderBar(['class' => 'containment'], ['class' => 'step'])."</li>";
-        echo "<li><h4>lime</h4>".$test->assignValues("lime")->renderBar(['class' => 'containment'], ['class' => 'step'])."</li>";
-        echo "<li><h4>cyan</h4>".$test->assignValues("cyan")->renderBar(['class' => 'containment'], ['class' => 'step'])."</li>";
-        echo "<li><h4>magenta</h4>".$test->assignValues("magenta")->renderBar(['class' => 'containment'], ['class' => 'step'])."</li>";
-        echo "<li><h4>yellow</h4>".$test->assignValues("yellow")->renderBar(['class' => 'containment'], ['class' => 'step'])."</li>";
-        echo "<li><h4>aqua</h4>".$test->assignValues("aqua")->renderBar(['class' => 'containment'], ['class' => 'step'])."</li>";
-        echo "<li><h4>blue-gray</h4>".$test->assignValues("blue-gray")->renderBar(['class' => 'containment'], ['class' => 'step'])."</li>";
-        echo "<li><h4>bb</h4>".$test->assignValues(["fff", '37915b'])->renderBar(['class' => 'containment'], ['class' => 'step'])."</li>";
+        echo "<li><h4>orange</h4>".$test->setValues("orange")->renderBar(['class' => 'containment'], ['class' => 'step'])."</li>";
+        echo "<li><h4>violet</h4>".$test->setValues("violet")->renderBar(['class' => 'containment'], ['class' => 'step'])."</li>";
+        echo "<li><h4>lime</h4>".$test->setValues("lime")->renderBar(['class' => 'containment'], ['class' => 'step'])."</li>";
+        echo "<li><h4>cyan</h4>".$test->setValues("cyan")->renderBar(['class' => 'containment'], ['class' => 'step'])."</li>";
+        echo "<li><h4>magenta</h4>".$test->setValues("magenta")->renderBar(['class' => 'containment'], ['class' => 'step'])."</li>";
+        echo "<li><h4>yellow</h4>".$test->setValues("yellow")->renderBar(['class' => 'containment'], ['class' => 'step'])."</li>";
+        echo "<li><h4>aqua</h4>".$test->setValues("aqua")->renderBar(['class' => 'containment'], ['class' => 'step'])."</li>";
+        echo "<li><h4>blue-gray</h4>".$test->setValues("blue-gray")->renderBar(['class' => 'containment'], ['class' => 'step'])."</li>";
+        echo "<li><h4>bb</h4>".$test->setValues(["fff", '37915b'])->renderBar(['class' => 'containment'], ['class' => 'step'])."</li>";
         
 ?>
 </ul>
 <h3 style='padding-top: 3em'>Complex:</h3>
 <ul>
 <?php
-        echo "<li><h4>opb</h4>".$test->assignValues("opb")->renderBar(['class' => 'containment'], ['class' => 'step'])."</li>";
-        echo "<li><h4>ovb</h4>".$test->assignValues("ovb")->renderBar(['class' => 'containment'], ['class' => 'step'])."</li>";
-        echo "<li><h4>r/g</h4>".$test->assignValues("r/g")->renderBar(['class' => 'containment'], ['class' => 'step'])."</li>";
+        echo "<li><h4>opb</h4>".$test->setValues("opb")->renderBar(['class' => 'containment'], ['class' => 'step'])."</li>";
+        echo "<li><h4>ovb</h4>".$test->setValues("ovb")->renderBar(['class' => 'containment'], ['class' => 'step'])."</li>";
+        echo "<li><h4>r/g</h4>".$test->setValues("r/g")->renderBar(['class' => 'containment'], ['class' => 'step'])."</li>";
 ?>
 </ul>
 

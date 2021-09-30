@@ -85,13 +85,13 @@
 
 // CONFIG
     $test1 = new GradientValues(); 
-    $test1->assignValues(["15,31,64", "128,0,50,34%", "187,187, 187,41%", "255,55,111,0.54"]);
+    $test1->setValues(["15,31,64", "128,0,50,34%", "187,187, 187,41%", "255,55,111,0.54"]);
 
     $test2 = new GradientValues();
-    $test2->assignValues('heatmap');
+    $test2->setValues('heatmap');
     
     $test3 = new GradientValues();
-    $test3->assignValues(['003', '9000ff', 'ffde00']);
+    $test3->setValues(['003', '9000ff', 'ffde00']);
 
 //
 //  TEST 1 - render full gradient
@@ -103,7 +103,7 @@
 <&quest;php
 
     $var = new GradientValues();
-    $var->assignValues(["#000", "#fff"]);
+    $var->setValues(["#000", "#fff"]);
     $var->renderBar();
 
 &quest;>
@@ -111,7 +111,7 @@
 <?
         
         echo "<details><summary>Input</summary>";
-        echo "<pre>";print_r($test1->valuesRGB);echo "</pre>";
+        echo "<pre>";print_r($test1->getValues());echo "</pre>";
         echo "</details>";
         // rendering gradient
         echo $test1->renderBar(['class' => 'containment'], ['class' => 'step']);
@@ -119,7 +119,7 @@
     echo "<hr class='section'>";
 
         echo "<details><summary>Input</summary>";
-        echo "<pre>";print_r($test2->valuesRGB);echo "</pre>";
+        echo "<pre>";print_r($test2->getValues());echo "</pre>";
         echo "</details>";
         // rendering gradient
         echo $test2->renderBar(['class' => 'containment'], ['class' => 'step']);
@@ -127,7 +127,7 @@
     echo "<hr class='section'>";
 
         echo "<details><summary>Input</summary>";
-        echo "<pre>";print_r($test3->valuesRGB);echo "</pre>";
+        echo "<pre>";print_r($test3->getValues());echo "</pre>";
         echo "</details>";
         // rendering gradient
         echo $test3->renderBar(['class' => 'containment'], ['class' => 'step']);
@@ -144,7 +144,7 @@
 <&quest;php
 
     $var = new GradientValues();
-    $var->assignValues(["#000", "#fff"]);
+    $var->setValues(["#000", "#fff"]);
     $var->renderCell($percent);
     
 &quest;>

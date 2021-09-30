@@ -16,13 +16,13 @@
          *
          * @var array
          */
-        public $valuesRGB = [];
+        private $valuesRGB = [];
         /**
          * Holds full gradient data.
          *
          * @var array
          */
-        public $range = [];
+        private $range = [];
         /**
          * Some counter.
          *
@@ -30,7 +30,7 @@
          */
         private $stopsCount = 0;
         /**
-         * Some other counter.
+         * Division value.
          *
          * @var integer
          */
@@ -71,13 +71,13 @@
         public function __construct($values = null) {
             if(is_string($values)) {
                 if(key_exists($values, $this->default)) {
-                    $this->assignValues($this->default[$values]);
+                    $this->setValues($this->default[$values]);
                 } else {
                     return false;
                 }
             }
             elseif(is_array($values)) {
-                if($this->assignValues($values) !== false) {
+                if($this->setValues($values) !== false) {
                     $this->calculateConfig();
                     $this->calculateTableArray();
                 } else {
@@ -119,9 +119,7 @@
             $j = 0;
             foreach($b as $key => $value) {
                 if($key < $i) {
-                    $percentage_diff = $b[$key + 1] - $b[$key]; // qty of steps between values
-                    $temp = []; // huh? w...
-                    
+                    $percentage_diff = $b[$key + 1] - $b[$key]; // number of steps between values
                     $actual = $this->valuesRGB[$key]; // starting value
                     $next = $this->valuesRGB[$key+1]; // following value
                     
@@ -154,13 +152,13 @@
                         }else{
                             $c = count($range[$channel]);
                             if($c != $percentage_diff + 1) {
-                                $dif = abs($percentage_diff - $c);
+                                // $dif = abs($percentage_diff - $c);
                                 for($k = $c; $k <= $percentage_diff; $k++) {
                                     $range[$channel][$k] = $range[$channel][array_key_last($range[$channel])];
                                 }
-                            } // ...and this is some fix without which it just won't work properly on occassion... just don't know why or where the issue happens (probably range rounding)...
+                            } // ...and this is some fix without which it just won't work properly on occassion... just don't know why or where the issue happens (probably range rounding, just couldn't be bothered to test)...
                         }
-                    } // account for lacking steps when $channel_step == 0
+                    } // account for lacking steps
 
                     $range_merged = [];
                     foreach($range['r'] as $rKey => $doesntMatter) {
@@ -197,25 +195,20 @@
          * @param Array $values
          * @return GradientValues|Boolean
          */
-        public function assignValues($values) {
+        public function setValues($values) {
             $this->zeroVariables();
             if(is_string($values)) {
                 if(key_exists($values, $this->default)) {
-                    $this->assignValues($this->default[$values]);
+                    $this->setValues($this->default[$values]);
                     $this->calculateConfig();
                     $this->calculateTableArray();
-                return $this;
-                } else {
-                    return false;
+                    return $this;
                 }
-            }
-            elseif(is_array($values)) {
+            } elseif(is_array($values)) {
                 $this->values = $values;
                 $this->calculateConfig();
                 $this->calculateTableArray();
                 return $this;
-            } else {
-                $this->zeroVariables();
             }
             return false;
         }
@@ -225,7 +218,7 @@
          *
          * @return GradientValues
          */
-        private function zeroVariables() {
+        public function zeroVariables() {
             // zero arrays
             $this->values = []; 
             $this->valuesRGB = []; 
@@ -237,9 +230,9 @@
         }
 
         /**
-         * Check values validity.
+         * Check values validity. Return true if check fine, false if failed.
          *
-         * @param String $value
+         * @param String $value Input RGB(a) value as hex (with or without hash) or integer set (each limited with comas, alpha as % or 1.0)
          * @return Boolean
          */
         private function checkValue(String $value) {
@@ -265,7 +258,7 @@
                     }
                     $value_parts = str_split($value, 2);
                 } else {
-                    // not proper transcription: must be 3/4 chars or 6/8 chars
+                    // improper input transcription: must be 3/4 chars or 6/8 chars
                     return false;
                 }
 
@@ -307,7 +300,7 @@
                         }
                     }
                 } else {
-                    // not hex, nor decimal
+                    // not hex, nor decimal, just plain wrong
                     return false;
                 }
             }
@@ -325,14 +318,8 @@
             $temp = null;
             unset($temp);
 
-            if(isset($alpha)) {
-                //$value_parts[3] = $alpha;
-                $rgba['a'] = $alpha;
-            } else {
-                $rgba['a'] = 1;
-            }
+            $rgba['a'] = isset($alpha) ? $alpha : 1;
             
-            //return $value_parts;
             $this->valuesRGB[] = $rgba;
             return true;
         }
@@ -344,8 +331,7 @@
          * @return Integer
          */
         private function hexProportion(String $v) {
-            $v = hexdec($v);
-            return ceil(($v * 100 ) / 255);
+            return ceil((hexdec($v) * 100 ) / 255);
         }
 
         /**
@@ -361,7 +347,7 @@
         /**
          * Value correction (lower than 0, higher than 255, float).
          *
-         * @param String|Float|Integer $v
+         * @param String|Float|Integer $v Input value of channel.
          * @return void
          */
         private function correctDecimal($v) {
@@ -375,9 +361,9 @@
         }
 
         /**
-         * Returns RGBA by input percentage.
+         * Returns RGB(a) by input percentage.
          *
-         * @param Integer $percent
+         * @param Integer $percent Input percentage.
          * @param Boolean $returnAsArray Returns array instead of string if TRUE.
          * @return Array|String By default a string of RGBA(), array if 2nd param is TRUE.
          */
@@ -426,6 +412,10 @@
                 return;
             }
             return $html;
+        }
+
+        public function getValues() {
+            return $this->valuesRGB;
         }
 
         /**
