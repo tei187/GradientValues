@@ -1,7 +1,5 @@
 <?php
     /**
-     * GradientValues
-     * 
      * Class used to generate gradient for intensification display purposes (ticks per hour, hits by day, etc).
      * @author Piotr Bonk <bonk.piotr@gmail.com>
      * @license MIT

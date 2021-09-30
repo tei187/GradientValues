@@ -1,9 +1,11 @@
 # GradientValues CLASS
 ## Ultimate gradient generator you always wanted.
+### (supplemented with RangeBasedPercentage class)
 ---
 
 Gradient is a PHP class used to generate a decimal-step-based RGBa gradient data, based on defined stops.
 Especially usefull with intensification displays (like ticks per hour, visits per day, etc.)
+Additionally supplied with RangeBasedPercentage to find percentage-relative of a value between given range.
 
 ## Features
 
