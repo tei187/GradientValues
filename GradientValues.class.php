@@ -43,8 +43,24 @@
          * @var array
          */
         private $default = [
-            'heatmap' => ["000", "00f", "0ff", "0f0", "ff0", "f00", "fff"],
-            'rgb'     => ["f00", "f80", "ff0", "8f0", "0f0", "0f8", '0ff', '08f', "00f", "80f", "f0f", "#f08", "#f00"]
+            'heatmap'   => ["000", "00f", "0ff", "0f0", "ff0", "f00", "fff"],
+            'rgb'       => ["f00", "f80", "ff0", "8f0", "0f0", "0f8", '0ff', '08f', "00f", "80f", "f0f", "f08", "f00"],
+            'b/w'       => ["fff", "000"],
+            'gray'      => ['fff', 'aaa'],
+            'red'       => ["fff", "f00"],
+            'green'     => ["fff", "0f0"],
+            'blue'      => ["fff", "00f"],
+            'orange'    => ["fff", "ffa600"],
+            'violet'    => ["fff", "8000ff"],
+            'lime'      => ['fff', 'c7fe00'],
+            'cyan'      => ["fff", "00c8ff"],
+            'aqua'      => ["fff", "00c8c8"],
+            'magenta'   => ["fff", "c800c8"],
+            'yellow'    => ["fff", "fe0"],
+            'blue-gray' => ["fff", "062c4a"],
+            'opb'       => ['ff8e44', 'f91362', '35126a'],
+            'ovb'       => ['f6bf75', 'd77185', '8766ac', '4150b1'],
+            'r/g'       => ["f00", "0f0"]
         ];
         
         /**
@@ -182,6 +198,7 @@
          * @return GradientValues|Boolean
          */
         public function assignValues($values) {
+            $this->zeroVariables();
             if(is_string($values)) {
                 if(key_exists($values, $this->default)) {
                     $this->assignValues($this->default[$values]);
@@ -212,7 +229,7 @@
             // zero arrays
             $this->values = []; 
             $this->valuesRGB = []; 
-            $this->spread = []; 
+            $this->range = []; 
             // zero counts
             $this->stopsCount = 0;
             $this->divider = 0;
@@ -257,7 +274,7 @@
                 $value_parts[1] = hexdec($value_parts[1]);
                 $value_parts[2] = hexdec($value_parts[2]);
 
-                // check for alpha, process if found
+                // check for alpha, process if found, substitute with 1 if missing
                 if(isset($value_parts[3])) {
                     $value_parts[3] = $this->hexProportion($value_parts[3]);
                     if($value_parts[3] > 100) { 
