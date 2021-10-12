@@ -12,10 +12,27 @@ Additionally supplied with RangeBasedPercentage to find percentage-relative of a
 - Use any RGB markup syntax *(ex. `128,31,187,50%`, `#fcad`, etc.)*
 - Return entire result table or just specific percent of the gradient
 - Export resulting gradient in different formats ***[not done yet]***
-- Use predefined gradients, like *heatmap*, *black body*, etc ***[not done yet]***
+- Use predefined gradients, like *heatmap*, *black body*, etc ***[partially done]***
 
 ## How to use?
-Check **tests** folder for further reference.
+### Creating gradient from RGB(a) values
+```php
+$var = new GradientValues();  // initiate object
+$var->setValues(["#000", "#fff"]); // set values for gradient
+
+echo $var->renderBar(); // render gradient
+
+echo $var->result(51); // returns rgba(rrr,ggg,bbb,a) string
+
+echo $var->renderCell(85); // return echoable HTML object filled with color equivalent to 85th step of the gradient
+```
+### Creating gradient from default gradients
+```php
+$var = new GradientValues();  // initiate object
+$var->setValues("heatmap"); // set values from preset gradient
+echo $var->renderBar();
+```
+Default gradients are (2021/10/12): `heatmap`, `rgb`, `red`, `green`, `blue`, `b/w`, `gray`, `orange`, `violet`, `lime`, `cyan`, `magenta`, `yellow`, `aqua`, `blue-gray`, `bb`, `opb`, `ovb`, `r/g`.
 
 ## Requirements
 - PHP >= 7.3
