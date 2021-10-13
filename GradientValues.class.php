@@ -1,39 +1,21 @@
 <?php
+    namespace tei187;
+
     /**
      * Class used to generate gradient for intensification display purposes (ticks per hour, hits by day, etc).
      * @author Piotr Bonk <bonk.piotr@gmail.com>
      * @license MIT
      */
     Class GradientValues {
-        /**
-         * Holds input values for processing.
-         *
-         * @var array
-         */
+        /** @var array Holds input values for processing. */
         private $values = [];
-        /**
-         * Holds processed values.
-         *
-         * @var array
-         */
+        /** @var array Holds processed values. */
         private $valuesRGB = [];
-        /**
-         * Holds full gradient data.
-         *
-         * @var array
-         */
+        /** @var array Holds full gradient data. */
         private $range = [];
-        /**
-         * Some counter.
-         *
-         * @var integer
-         */
+        /** @var integer Some counter. */
         private $stopsCount = 0;
-        /**
-         * Division value.
-         *
-         * @var integer
-         */
+        /** @var integer Division value. */
         private $divider = 0;
 
         /**
@@ -42,7 +24,7 @@
          *
          * @var array
          */
-        private $default = [
+        protected $default = [
             'heatmap'   => ["000", "00f", "0ff", "0f0", "ff0", "f00", "fff"],
             'rgb'       => ["f00", "f80", "ff0", "8f0", "0f0", "0f8", '0ff', '08f', "00f", "80f", "f0f", "f08", "f00"],
             'b/w'       => ["fff", "000"],
@@ -60,32 +42,30 @@
             'blue-gray' => ["fff", "062c4a"],
             'opb'       => ['ff8e44', 'f91362', '35126a'],
             'ovb'       => ['f6bf75', 'd77185', '8766ac', '4150b1'],
-            'r/g'       => ["f00", "0f0"]
+            'r/g'       => ["f00", "0f0"],
+            'instagram' => ['833ab4', 'fd1d1d', 'fcb045'],
+            'twitch'    => ['6441A5', '2a0845'],
         ];
         
         /**
          * Class constructor.
          *
-         * @param Array|null $values
+         * @param Array|String|null $values
          */
         public function __construct($values = null) {
             if(is_string($values)) {
                 if(key_exists($values, $this->default)) {
                     $this->setValues($this->default[$values]);
-                } else {
-                    return false;
                 }
             }
             elseif(is_array($values)) {
                 if($this->setValues($values) !== false) {
                     $this->calculateConfig();
                     $this->calculateTableArray();
-                } else {
-                    return false;
                 }
             }
-            return;
         }
+
         /**
          * Start calulation block.
          *
@@ -214,11 +194,11 @@
         }
 
         /**
-         * Null properties.
+         * Zero out properties.
          *
          * @return GradientValues
          */
-        public function zeroVariables() {
+        public function zeroVariables() : GradientValues {
             // zero arrays
             $this->values = []; 
             $this->valuesRGB = []; 
@@ -235,7 +215,7 @@
          * @param String $value Input RGB(a) value as hex (with or without hash) or integer set (each limited with comas, alpha as % or 1.0)
          * @return Boolean
          */
-        private function checkValue(String $value) {
+        private function checkValue(String $value) : bool {
             $value = str_replace("#", "", $value);
             $value = str_replace(" ", "", $value);
 
@@ -330,7 +310,7 @@
          * @param String $v
          * @return Integer
          */
-        private function hexProportion(String $v) {
+        private function hexProportion(String $v) : int {
             return ceil((hexdec($v) * 100 ) / 255);
         }
 
@@ -340,7 +320,7 @@
          * @param String $v
          * @return String
          */
-        private function hexSingleToDouble(String $v) {
+        private function hexSingleToDouble(String $v) : string {
             return $v.$v;
         }
 
@@ -350,7 +330,7 @@
          * @param String|Float|Integer $v Input value of channel.
          * @return void
          */
-        private function correctDecimal($v) {
+        private function correctDecimal($v) : int {
             $v = intval($v);
             if($v < 0) {
                 $v = 0;
@@ -387,9 +367,9 @@
          * @param Array $containerAttributes Array with container attributes.
          * @param Array $cellAttributes Array with cell attributes.
          * @param Boolean $echo Flag. If true, echoes returning void or if false returns HTML. Default false.
-         * @return void|String HTML or echo.
+         * @return String HTML or echo.
          */
-        public function renderBar(Array $containerAttributes, Array $cellAttributes, Bool $echo = false) {
+        public function renderBar(Array $containerAttributes, Array $cellAttributes, Bool $echo = false) : string {
             $contAttr = null;
             foreach($containerAttributes as $attribute => $value) {
                 $contAttr .= " {$attribute}='{$value}'";
@@ -409,7 +389,7 @@
 
             if($echo) {
                 echo $html;
-                return;
+                return "";
             }
             return $html;
         }
@@ -427,7 +407,7 @@
          * @param String|null $content Specifies content inside the tag.
          * @return String HTML.
          */
-        public function renderCell(Float $percent, String $tag = "div", $cellAttributes = null, String $content = null) {
+        public function renderCell(Float $percent, String $tag = "div", $cellAttributes = null, String $content = null) : string {
             $percentRnd = round($percent);
             $cellAttr = null;
             if(is_array($cellAttributes)) {
@@ -438,6 +418,19 @@
                 $cellAttr = " ".$cellAttributes;
             }
             return "<{$tag} {$cellAttr} style='background-color: {$this->result($percentRnd)}'>{$content}</{$tag}>";
+        }
+
+        /**
+         * Reverts gradient front-to-back.
+         * 
+         * @return GradientValues
+         */
+        public function revert() : GradientValues {
+            $ks = array_keys($this->values);
+            $vs = array_values($this->values);
+            $reverted = array_reverse($this->values);
+            $this->setValues($reverted);
+            return $this;
         }
     }
 ?>

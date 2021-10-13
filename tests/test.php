@@ -2,18 +2,24 @@
 <head>
   <title>GradientValues class</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
   <style>
         html {
             background-color: #333844;
+            display: flex;
         }
         body {
-            margin: 5vw;
+            margin: 5vw auto;
             padding: 2.5vw;
             border: 1px solid rgba(0,0,0,.1);
             background-color: #fff;
             border-radius: 1em;
             box-shadow: 0 0 25px #090a0c;
             height: min-content;
+            max-width: 750px;
+            width: 100%;
         }
         hr.section {
             border-top: 2px dotted #0001;
@@ -25,8 +31,16 @@
             margin-top: 2em;
             border-top: 2px dashed #0004;
         }
+        h1, h2 {
+            font-family: Montserrat;
+        }
+        h1 {
+            border-bottom: 4px solid #0002;
+            font-size: 2.5rem;
+            padding-bottom: 1rem;
+            margin-bottom: 1.5em;
+        }
         h2 {
-            font-family: system-ui;
             border-bottom: 1px dotted rgba(0,0,0,.2);
             padding-bottom: .25em;
         }
@@ -84,15 +98,16 @@
     require("../GradientValues.class.php");
 
 // CONFIG
-    $test1 = new GradientValues(); 
+    $test1 = new tei187\GradientValues;
     $test1->setValues(["15,31,64", "128,0,50,34%", "187,187, 187,41%", "255,55,111,0.54"]);
 
-    $test2 = new GradientValues();
+    $test2 = new tei187\GradientValues;
     $test2->setValues('heatmap');
     
-    $test3 = new GradientValues();
+    $test3 = new tei187\GradientValues;
     $test3->setValues(['003', '9000ff', 'ffde00']);
 
+    echo "<h1>GradientValues : class</h1>";
 //
 //  TEST 1 - render full gradient
 //
@@ -102,7 +117,7 @@
 <code><pre>
 <&quest;php
 
-    $var = new GradientValues();
+    $var = new tei187\GradientValues;
     $var->setValues(["#000", "#fff"]);
     $var->renderBar();
 
@@ -143,7 +158,7 @@
 <code><pre>
 <&quest;php
 
-    $var = new GradientValues();
+    $var = new tei187\GradientValues;
     $var->setValues(["#000", "#fff"]);
     $var->renderCell($percent);
     

@@ -17,7 +17,7 @@ Additionally supplied with RangeBasedPercentage to find percentage-relative of a
 ## How to use?
 ### Creating gradient from RGB(a) values
 ```php
-$var = new GradientValues();  // initiate object
+$var = new tei187\GradientValues;  // initiate object
 $var->setValues(["#000", "#fff"]); // set values for gradient
 
 echo $var->renderBar(); // render gradient
@@ -28,11 +28,18 @@ echo $var->renderCell(85); // return echoable HTML object filled with color equi
 ```
 ### Creating gradient from default gradients
 ```php
-$var = new GradientValues();  // initiate object
+$var = new tei187\GradientValues;  // initiate object
 $var->setValues("heatmap"); // set values from preset gradient
 echo $var->renderBar();
 ```
 Default gradients are (2021/10/12): `heatmap`, `rgb`, `red`, `green`, `blue`, `b/w`, `gray`, `orange`, `violet`, `lime`, `cyan`, `magenta`, `yellow`, `aqua`, `blue-gray`, `bb`, `opb`, `ovb`, `r/g`.
+
+### Reverting gradient
+```php
+$var = new tei187\GradientValues;  // initiate object
+$var->setValues(["#f00", "#00f"]); // set values for gradient, from red to blue
+$var->revert(); // reverts the gradient, from blue to red
+```
 
 ## Requirements
 - PHP >= 7.3
