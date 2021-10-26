@@ -451,7 +451,7 @@ namespace tei187\IntensificationGradient;
          * @param boolean $rgba If set to TRUE, returns each step as rgba(...) string. If set to FALSE, returns each step as {"r", "g", "b", "a"} nodes. FALSE by default.
          * @return string
          */
-        public function returnJSON(bool $rgba = false) : String {
+        public function returnJSON(bool $rgba = false) : string {
             if($rgba) {
                 $temp = [];
                 foreach($this->range as $index => $values) {
@@ -460,6 +460,23 @@ namespace tei187\IntensificationGradient;
                 return json_encode($temp, JSON_PRETTY_PRINT);
             }
             return json_encode($this->range, JSON_PRETTY_PRINT);
+        }
+
+        /**
+         * Returns calculated range as array.
+         *
+         * @param boolean $rgba If set to TRUE, returns each step as rgba(...) string. If set to FALSE, returns each step as {"r", "g", "b", "a"} pairs. FALSE by default.
+         * @return array
+         */
+        public function returnArray(bool $rgba = false) : array {
+            if($rgba) {
+                $rgbaArray = [];
+                foreach($this->range as $index => $values) {
+                    $rgbaArray[] = "rgba(".implode(",", $this->range[$index]).")";
+                }
+                return $rgbaArray;
+            }
+            return $this->range;
         }
     }
 ?>
