@@ -1,64 +1,78 @@
 <?php
-    namespace tei187;
+namespace tei187\IntensificationGradient;
 
-    /**
+/**
      * Class used to generate gradient for intensification display purposes (ticks per hour, hits by day, etc).
      * @author Piotr Bonk <bonk.piotr@gmail.com>
      * @license MIT
      */
-    Class GradientValues {
-        /** @var array Holds input values for processing. */
+    Class Generator {
+        /** @var array Holds input values, pre-processing. */
         private $values = [];
-        /** @var array Holds processed values. */
+        /** @var array Holds RGB values based on input, mid-process. */
         private $valuesRGB = [];
-        /** @var array Holds full gradient data. */
+        /** @var array Holds full gradient data, post-processing. */
         private $range = [];
-        /** @var integer Some counter. */
+        /** @var integer Count of defined stops from user input. */
         private $stopsCount = 0;
-        /** @var integer Division value. */
+        /** @var integer Division value - range between two stops, given a 100 stops limit in overall gradient. */
         private $divider = 0;
 
         /**
-         * Holds preset gradients
+         * @var array Holds preset gradients
          * @todo Expand on standard gradients.
-         *
-         * @var array
          */
         protected $default = [
-            'heatmap'   => ["000", "00f", "0ff", "0f0", "ff0", "f00", "fff"],
-            'rgb'       => ["f00", "f80", "ff0", "8f0", "0f0", "0f8", '0ff', '08f', "00f", "80f", "f0f", "f08", "f00"],
-            'b/w'       => ["fff", "000"],
-            'gray'      => ['fff', 'aaa'],
-            'red'       => ["fff", "f00"],
-            'green'     => ["fff", "0f0"],
-            'blue'      => ["fff", "00f"],
-            'orange'    => ["fff", "ffa600"],
-            'violet'    => ["fff", "8000ff"],
-            'lime'      => ['fff', 'c7fe00'],
-            'cyan'      => ["fff", "00c8ff"],
-            'aqua'      => ["fff", "00c8c8"],
-            'magenta'   => ["fff", "c800c8"],
-            'yellow'    => ["fff", "fe0"],
-            'blue-gray' => ["fff", "062c4a"],
-            'opb'       => ['ff8e44', 'f91362', '35126a'],
-            'ovb'       => ['f6bf75', 'd77185', '8766ac', '4150b1'],
-            'r/g'       => ["f00", "0f0"],
-            'instagram' => ['833ab4', 'fd1d1d', 'fcb045'],
-            'twitch'    => ['6441A5', '2a0845'],
+            // basic:
+            // - popular use:
+            'heatmap'    => ["000", "00f", "0ff", "0f0", "ff0", "f00", "fff"],
+            'color-temp' => ["f80", "ffc586", "fff", "cddcff", "a1bfff"],
+            'rgb'        => ["f00", "f80", "ff0", "8f0", "0f0", "0f8", "0ff", "08f", "00f", "80f", "f0f", "f08", "f00"],
+            // - main sequence additive:
+            'red'        => ["fff", "f00"],
+            'green'      => ["fff", "0f0"],
+            'blue'       => ["fff", "00f"],
+            // - main sequence subtractive:
+            'cyan'       => ["fff", "00c8ff"],
+            'magenta'    => ["fff", "c800c8"],
+            'yellow'     => ["fff", "fe0"],
+            'black'      => ["fff", "000"],
+            // off-color:
+            'gray'       => ['fff', 'aaa'],
+            'beige'      => ['fdfcfb', 'e2d1c3'],
+            'orange'     => ["fff", "ffa600"],
+            'violet'     => ["fff", "8000ff"],
+            'lime'       => ['fff', 'c7fe00'],
+            'aqua'       => ["fff", "00c8c8"],
+            'blue-gray'  => ["fff", "062c4a"],
+            // intense:
+            'opb'        => ['ff8e44', 'f91362', '35126a'],
+            'ovb'        => ['f6bf75', 'd77185', '8766ac', '4150b1'],
+            'r/g'        => ["f00", "0f0"],
+            'rastafari'  => ['1e9600', 'fff200', 'ff0000'],
+            'argon-blue' => ['fdeff9', 'ec38bc', '7303c0', '03001e'],
+            'blackbody'  => ['ff0', 'f00', '000'],
+            'nvg'        => ["fff", "44f281", "2da657", "1d7332", "010d00" ],
+            // brands:
+            'instagram'  => ['fcb045', 'fd1d1d', '833ab4'],
+            'twitch'     => ['6441a5', '2a0845'],
+            'facebook'   => ['ffffff', '3b5998'],
+            'google'     => ['4285f4', '34a853', 'fbbc05', 'ea4335'],
+            'lyft'       => ['f3f3f5', 'e90b8b', '352384', '333447'],
+            'skype'      => ['d7ecf7', '07a8e7'],
         ];
         
         /**
          * Class constructor.
          *
-         * @param Array|String|null $values
+         * @param array|string|null $values
          */
         public function __construct($values = null) {
             if(is_string($values)) {
                 if(key_exists($values, $this->default)) {
                     $this->setValues($this->default[$values]);
                 }
-            }
-            elseif(is_array($values)) {
+            } elseif(is_array($values)) {
                 if($this->setValues($values) !== false) {
                     $this->calculateConfig();
                     $this->calculateTableArray();
@@ -69,7 +83,7 @@
         /**
          * Start calulation block.
          *
-         * @return GardientValues|Boolean
+         * @return GardientValues|boolean
          */
         private function calculateConfig() {
             $this->stopsCount = count($this->values);
@@ -88,9 +102,9 @@
         /**
          * Calculates entire table for the full gradient.
          *
-         * @return Array
+         * @return array
          */
-        private function calculateTableArray() {
+        private function calculateTableArray() : array {
             $a = range(0, 100, 100 / $this->divider);
             $b = array_map(fn($value): int => round($value), $a);
             $i = count($b) - 1;
@@ -172,8 +186,8 @@
         /**
          * Assign values.
          *
-         * @param Array $values
-         * @return GradientValues|Boolean
+         * @param array $values
+         * @return Generator|boolean
          */
         public function setValues($values) {
             $this->zeroVariables();
@@ -196,9 +210,9 @@
         /**
          * Zero out properties.
          *
-         * @return GradientValues
+         * @return Generator
          */
-        public function zeroVariables() : GradientValues {
+        public function zeroVariables() : Generator {
             // zero arrays
             $this->values = []; 
             $this->valuesRGB = []; 
@@ -212,8 +226,8 @@
         /**
          * Check values validity. Return true if check fine, false if failed.
          *
-         * @param String $value Input RGB(a) value as hex (with or without hash) or integer set (each limited with comas, alpha as % or 1.0)
-         * @return Boolean
+         * @param string $value Input RGB(a) value as hex (with or without hash) or integer set (each limited with comas, alpha as % or 1.0)
+         * @return boolean
          */
         private function checkValue(String $value) : bool {
             $value = str_replace("#", "", $value);
@@ -307,8 +321,8 @@
         /**
          * Proportion calulation for hex (conversion to %, by 255 = 100%, 0 = 0%).
          *
-         * @param String $v
-         * @return Integer
+         * @param string $v
+         * @return integer
          */
         private function hexProportion(String $v) : int {
             return ceil((hexdec($v) * 100 ) / 255);
@@ -317,8 +331,8 @@
         /**
          * Change single char value to double char value.
          *
-         * @param String $v
-         * @return String
+         * @param string $v
+         * @return string
          */
         private function hexSingleToDouble(String $v) : string {
             return $v.$v;
@@ -327,7 +341,7 @@
         /**
          * Value correction (lower than 0, higher than 255, float).
          *
-         * @param String|Float|Integer $v Input value of channel.
+         * @param string|float|integer $v Input value of channel.
          * @return void
          */
         private function correctDecimal($v) : int {
@@ -343,9 +357,9 @@
         /**
          * Returns RGB(a) by input percentage.
          *
-         * @param Integer $percent Input percentage.
-         * @param Boolean $returnAsArray Returns array instead of string if TRUE.
-         * @return Array|String By default a string of RGBA(), array if 2nd param is TRUE.
+         * @param integer $percent Input percentage.
+         * @param boolean $returnAsArray Returns array instead of string if TRUE.
+         * @return array|string By default a string of RGBA(), array if 2nd param is TRUE.
          */
         public function result(Int $percent, Bool $returnAsArray = false) {
             $percent = str_replace("%", "", $percent);
@@ -364,10 +378,10 @@
         /**
          * Renders entire gradient bar.
          *
-         * @param Array $containerAttributes Array with container attributes.
-         * @param Array $cellAttributes Array with cell attributes.
-         * @param Boolean $echo Flag. If true, echoes returning void or if false returns HTML. Default false.
-         * @return String HTML or echo.
+         * @param array $containerAttributes Array with container attributes.
+         * @param array $cellAttributes Array with cell attributes.
+         * @param boolean $echo Flag. If true, echoes returning void or if false returns HTML. Default false.
+         * @return string HTML or echo.
          */
         public function renderBar(Array $containerAttributes, Array $cellAttributes, Bool $echo = false) : string {
             $contAttr = null;
@@ -401,11 +415,11 @@
         /**
          * Renders single cell / object.
          *
-         * @param Float $percent Specifies which percent to represent (rounds to Decimal).
-         * @param String $tag Specifies which tag to render.
-         * @param String|Array $cellAttributes Specifies which attributes should the tag have.
-         * @param String|null $content Specifies content inside the tag.
-         * @return String HTML.
+         * @param float $percent Specifies which percent to represent (rounds to Decimal).
+         * @param string $tag Specifies which tag to render.
+         * @param string|array $cellAttributes Specifies which attributes should the tag have.
+         * @param string|null $content Specifies content inside the tag.
+         * @return string HTML.
          */
         public function renderCell(Float $percent, String $tag = "div", $cellAttributes = null, String $content = null) : string {
             $percentRnd = round($percent);
@@ -421,16 +435,48 @@
         }
 
         /**
-         * Reverts gradient front-to-back.
+         * Inverts gradient front-to-back (1...n to n...1).
          * 
-         * @return GradientValues
+         * @return Generator
          */
-        public function revert() : GradientValues {
-            $ks = array_keys($this->values);
-            $vs = array_values($this->values);
-            $reverted = array_reverse($this->values);
-            $this->setValues($reverted);
+        public function invert() : Generator {
+            $inverted = array_reverse($this->values);
+            $this->setValues($inverted);
             return $this;
+        }
+
+        /**
+         * Returns calculated range as JSON.
+         *
+         * @param boolean $rgba If set to TRUE, returns each step as rgba(...) string. If set to FALSE, returns each step as {"r", "g", "b", "a"} nodes. FALSE by default.
+         * @return string
+         */
+        public function returnJSON(bool $rgba = false) : string {
+            if($rgba) {
+                $temp = [];
+                foreach($this->range as $index => $values) {
+                    $temp[] = "rgba(".implode(",", $this->range[$index]).")";
+                }
+                return json_encode($temp, JSON_PRETTY_PRINT);
+            }
+            return json_encode($this->range, JSON_PRETTY_PRINT);
+        }
+
+        /**
+         * Returns calculated range as array.
+         *
+         * @param boolean $rgba If set to TRUE, returns each step as rgba(...) string. If set to FALSE, returns each step as {"r", "g", "b", "a"} pairs. FALSE by default.
+         * @return array
+         */
+        public function returnArray(bool $rgba = false) : array {
+            if($rgba) {
+                $rgbaArray = [];
+                foreach($this->range as $index => $values) {
+                    $rgbaArray[] = "rgba(".implode(",", $this->range[$index]).")";
+                }
+                return $rgbaArray;
+            }
+            return $this->range;
         }
     }
 ?>

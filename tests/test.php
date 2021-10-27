@@ -95,16 +95,16 @@
 <body>
 
 <?php
-    require("../GradientValues.class.php");
+    require("../src/Generator.php");
 
 // CONFIG
-    $test1 = new tei187\GradientValues;
+    $test1 = new tei187\IntensificationGradient\Generator; 
     $test1->setValues(["15,31,64", "128,0,50,34%", "187,187, 187,41%", "255,55,111,0.54"]);
 
-    $test2 = new tei187\GradientValues;
+    $test2 = new tei187\IntensificationGradient\Generator; 
     $test2->setValues('heatmap');
     
-    $test3 = new tei187\GradientValues;
+    $test3 = new tei187\IntensificationGradient\Generator; 
     $test3->setValues(['003', '9000ff', 'ffde00']);
 
     echo "<h1>GradientValues : class</h1>";
