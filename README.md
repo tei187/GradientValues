@@ -18,15 +18,14 @@ Works nicely when supplied with [RangeBasedPercentage](https://github.com/tei187
 $var = new tei187\IntensificationGradient\Generator;  // initiate object
 $var->setValues(["#000", "#fff"]); // set values for gradient
 
-echo $var->renderBar(); // render gradient
+echo $var->renderBar(); // renders gradient (requires CSS class assignment for proper display)
 
-echo $var->result(51); // returns rgba(rrr,ggg,bbb,a) string
+echo $var->result(51); // returns rgba(rrr,ggg,bbb,a) string for 51st step
 
 echo $var->renderCell(85); // return echoable HTML object filled with color equivalent to 85th step of the gradient
 ```
 
-
-### Creating gradient from default gradients
+### Creating gradient from predefined presets
 ```php
 $var = new tei187\IntensificationGradient\Generator;  // initiate object
 $var->setValues("heatmap"); // set values from preset gradient
@@ -40,6 +39,15 @@ Typed in the gradient from the opposite direction? Or maybe just need to switch 
 $var = new tei187\IntensificationGradient\Generator;  // initiate object
 $var->setValues(["#f00", "#00f"]); // set values for gradient, from red to blue
 $var->invert(); // reverts the gradient, from blue to red
+```
+
+### Generating preview page
+```php
+use tei187\IntensificationGradient\Generator as Generator;
+use tei187\IntensificationGradient\HtmlPreview as HtmlPreview;
+$gen = new Generator("opb"); // create Generator object
+$prev = new HtmlPreview("Testing", $gen->returnArray(false)); // pass to HtmlPreview
+echo $prev->buildPage();
 ```
 
 ### Exporting to JSON
