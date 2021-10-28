@@ -6,9 +6,9 @@
     use tei187\IntensificationGradient\Generator as Generator;
     use tei187\IntensificationGradient\HtmlPreview as HtmlPreview;
 
-    $gen = new Generator("opb");
+    $gen = new Generator("rgb");
 
-    $prev = new HtmlPreview("Testing", $gen->returnArray(false));
+    $prev = new HtmlPreview("Testing", $gen->returnArray(true));
     echo $prev->buildPage();
 
 ?>

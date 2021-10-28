@@ -2,6 +2,11 @@
 namespace tei187\IntensificationGradient;
 use tei187\IntensificationGradient\Generator as Generator;
 
+/**
+ * Supportive class used to generate a HTML display of Generator's outcome array.
+ * @author Piotr Bonk <bonk.piotr@gmail.com>
+ * @license MIT
+ */
 Class HtmlPreview {
     /** @var string Document title. */
     private $title = null;
@@ -11,14 +16,20 @@ Class HtmlPreview {
     /**
      * Constructor.
      *
-     * @param string|null $title
-     * @param Generator|array|string|null $range
+     * @param string|null $title Title to display in TITLE and H1 tags.
+     * @param Generator|array|string|null $range Gradient range as a Generator object or returned arrays.
      */
     function __construct(string $title = null, $range = null) {
         if(!is_null($range)) $this->setRange($range);
         if(!is_null($title)) $this->setTitle($title);
     }
 
+    /**
+     * Checks wether input string is a proper JSON.
+     *
+     * @param string $v Input JSON.
+     * @return boolean Returns TRUE is JSON is proper, FALSE if not.
+     */
     private function checkJSON(string $v) : bool {
         $test = json_decode($v);
         if(json_last_error() === JSON_ERROR_NONE) {
@@ -28,10 +39,10 @@ Class HtmlPreview {
     }
 
     /**
-     * Sets range on data based of Generator class object, Generator class exported JSON or Generator class exported array. Otherwise FALSE.
+     * Sets range on data based of Generator class object, Generator class exported JSON or Generator class exported array.
      *
-     * @param Generator|array|null $range
-     * @return HtmlPreview|boolean
+     * @param Generator|array|null $range Range in one of accepted types.
+     * @return HtmlPreview|boolean Returns self or FALSE if input range is null or cannot be identified as compliant.
      */
     public function setRange($range = null) {
         if(is_null($range)) {
@@ -56,7 +67,7 @@ Class HtmlPreview {
     /**
      * Sets range from passed Generator object.
      *
-     * @param Generator $v
+     * @param Generator $v Generator object.
      * @return void
      */
     private function setRangeFromObject(Generator $v) : void {
@@ -66,7 +77,7 @@ Class HtmlPreview {
     /**
      * Sets range from JSON exported from Generator::returnJSON().
      *
-     * @param string $v
+     * @param string $v Proper Generator object range JSON.
      * @return void
      */
     private function setRangeFromJSON(string $v) : void {
@@ -78,7 +89,7 @@ Class HtmlPreview {
     /**
      * Sets range from output array of Generator::returnArray().
      *
-     * @param array $v
+     * @param array $v Proper Generator object range array.
      * @return void
      */
     private function setRangeFromArray(array $v) : void {
@@ -87,10 +98,10 @@ Class HtmlPreview {
     }
 
     /**
-     * Checks transcription type of input array.
+     * Checks transcription type of input array (string: rgba(rrr,ggg,bbb,a), array = [['r']['g']['b']['a']]).
      *
-     * @param array $v
-     * @return string|bool
+     * @param array $v Range array to check.
+     * @return string|bool Returns type on properly parsed input value, or FALSE if non-compliant.
      */
     private function checkRangeTranscription(array $v) {
         if(is_string($v[0])) {
@@ -112,7 +123,7 @@ Class HtmlPreview {
      *
      * @param array $v
      * @param string|boolean $type String of values "string" or "array" or bool FALSE.
-     * @return array
+     * @return array Parsed gradient range.
      */
     private function parseRangeArray(array $v, string $type) : array {
         $output = [];
@@ -131,7 +142,7 @@ Class HtmlPreview {
     /**
      * Sets title for the document.
      *
-     * @param string|null $title
+     * @param string|null $title Title to set.
      * @return HtmlPreview
      */
     public function setTitle(string $title = null) : HtmlPreview {
@@ -140,9 +151,9 @@ Class HtmlPreview {
     }
 
     /**
-     * Builds HTML page.
+     * Returns entire generated HTML page.
      *
-     * @return string HTML structure.
+     * @return string HTML.
      */
     public function buildPage() : string {
         $html  = $this->buildStart();
@@ -155,7 +166,7 @@ Class HtmlPreview {
             $cells .= $this->buildCell($key);
         }
         
-        $html .= "<div class='flex flex-wrap -mx-3 overflow-hidden'>\r\n";
+        $html .= "<div class='flex flex-wrap -mx-3'>\r\n";
         $html .= $cells;
         $html .= "</div>";
         $html .= "</div>";
@@ -165,13 +176,13 @@ Class HtmlPreview {
     }
 
     /**
-     * Builds single HTML component for given step in $this->range.
+     * (HTML) Builds single div component for given step in $this->range.
      *
      * @param integer $id Key of index from $this->range.
      * @return string HTML.
      */
     private function buildCell(int $id) : string {
-        $class = "py-3 px-3 w-full overflow-hidden sm:w-1/2 md:w-1/4 lg:w-1/6";
+        $class = "py-3 px-3 w-1/2 sm:w-1/2 md:w-1/4 lg:w-1/6";
 
         $html  = "<div class='{$class}' id='cell-{$id}'>\r\n";
         $html .= "<div>";
@@ -183,31 +194,62 @@ Class HtmlPreview {
         return $html;
     }
 
+    /**
+     * (HTML) Returns H1 with title.
+     *
+     * @return string
+     */
     private function buildHeading() : string {
         return "<h1>{$this->title}</h1>";
     }
 
+    /**
+     * (HTML) Returns style tag with CSS.
+     *
+     * @return string HTML.
+     */
     private function buildStyles() : string {
         $html  = "<style>\r\n";
         $html .= "body { background-color: #e8e8e8 }\r\n";
         $html .= "footer { color: #ccc; }\r\n";
         $html .= "footer a:hover { color: #999; }\r\n";
         $html .= "h1 { font-weight: bold; font-size: xxx-large; padding-top: 1em; margin-bottom: .5em; border-bottom: 2px solid black; }\r\n";
+        $html .= "div[id*='cell'] { transition: transform .2s ease-in-out }\r\n";
+        $html .= "div[id*='cell']:hover { transform: scale(1.1) }\r\n";
         $html .= "div[id*='cell'] > div { background-color: #fafafa; box-shadow: 0 3px 10px 1px #00000018; text-align: center; padding: 1em }\r\n";
-        $html .= "div[id*='cell'] > div > div:first-child { font-size: smaller; color: #aaa }\r\n";
+        $html .= "div[id*='cell'] > div > div:first-child { font-size: smaller; color: #aaa; padding-bottom: .5em }\r\n";
         $html .= "div[id*='cell'] > div > div > span { display: block; font-size: larger; font-weight: bold; color: black }\r\n";
         $html .= "div[id*='cell'] > div > div:last-child { height: 33vh; max-height: 150px; min-height: 50px; }\r\n";
         $html .= "</style>\r\n";
-
         return $html;
     }
 
+    /**
+     * (HTML) Returns top-most source code.
+     *
+     * @return string HTML.
+     */
     private function buildStart() : string {
-        return "<!DOCTYPE html><html><head><title>{$this->title} - colors</title><link href='https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css' rel='stylesheet'></head><body>";
+        $html  = "<!DOCTYPE html>\r\n<html>\r\n<head>\r\n";
+        $html .= "<title>{$this->title} - colors</title>\r\n";
+        $html .= "<meta name='viewport' content='width=device-width, initial-scale=1'>\r\n";
+        $html .= "<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>\r\n";
+        $html .= "<link href='https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css' rel='stylesheet'>\r\n";
+        $html .= "</head><body>";
+        return $html;
     }
 
+    /**
+     * (HTML) Returns footer and bottom-most source code.
+     *
+     * @return string HTML.
+     */
     private function buildEnd() : string {
-        return "<footer class='bg-gray-100 flex justify-center mt-5 p-3 w-full'><span>Generated with <a href='https://github.com/tei187/IntensificationGradient' target='_blank'>Intensification Gradient</a></span></footer></body></html>";
+        $html  = "<footer class='bg-gray-100 flex justify-center mt-5 p-3 w-full'>\r\n";
+        $html .= "<span>Generated with <a href='https://github.com/tei187/IntensificationGradient' target='_blank'>Intensification Gradient</a></span>\r\n";
+        $html .= "</footer>\r\n";
+        $html .= "</body></html>";
+        return $html;
     }
 
 }

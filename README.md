@@ -41,15 +41,6 @@ $var->setValues(["#f00", "#00f"]); // set values for gradient, from red to blue
 $var->invert(); // reverts the gradient, from blue to red
 ```
 
-### Generating preview page
-```php
-use tei187\IntensificationGradient\Generator as Generator;
-use tei187\IntensificationGradient\HtmlPreview as HtmlPreview;
-$gen = new Generator("opb"); // create Generator object
-$prev = new HtmlPreview("Testing", $gen->returnArray(false)); // pass to HtmlPreview
-echo $prev->buildPage();
-```
-
 ### Exporting to JSON
 It is also possible to export the resulting gradient range to JSON format.
 ```php
@@ -57,6 +48,17 @@ $var = new tei187\IntensificationGradient\Generator;  // initiate object
 $var->setValues(["#f00", "#00f"]); // set values for gradient, from red to blue
 return $var->returnJSON();
 ```
+
+### Generating preview page
+There is also a possibility to render an entire HTML page for the outcome of Gradient range.
+```php
+use tei187\IntensificationGradient\Generator as Generator;
+use tei187\IntensificationGradient\HtmlPreview as HtmlPreview;
+$gen = new Generator("opb"); // create Generator object
+$prev = new HtmlPreview("Testing", $gen->returnArray(true)); // pass to HtmlPreview
+echo $prev->buildPage();
+```
+
 
 ## Requirements
 - PHP >= 7.3
