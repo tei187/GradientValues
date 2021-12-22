@@ -229,7 +229,7 @@ namespace tei187\IntensificationGradient;
          * @param string $value Input RGB(a) value as hex (with or without hash) or integer set (each limited with comas, alpha as % or 1.0)
          * @return boolean
          */
-        private function checkValue(String $value) : bool {
+        private function checkValue(string $value) : bool {
             $value = str_replace("#", "", $value);
             $value = str_replace(" ", "", $value);
 
@@ -324,7 +324,7 @@ namespace tei187\IntensificationGradient;
          * @param string $v
          * @return integer
          */
-        private function hexProportion(String $v) : int {
+        private function hexProportion(string $v) : int {
             return ceil((hexdec($v) * 100 ) / 255);
         }
 
@@ -334,7 +334,7 @@ namespace tei187\IntensificationGradient;
          * @param string $v
          * @return string
          */
-        private function hexSingleToDouble(String $v) : string {
+        private function hexSingleToDouble(string $v) : string {
             return $v.$v;
         }
 
@@ -361,7 +361,7 @@ namespace tei187\IntensificationGradient;
          * @param boolean $returnAsArray Returns array instead of string if TRUE.
          * @return array|string By default a string of RGBA(), array if 2nd param is TRUE.
          */
-        public function result(Int $percent, Bool $returnAsArray = false) {
+        public function result(int $percent, bool $returnAsArray = false) {
             $percent = str_replace("%", "", $percent);
             $percent = intval($percent);
             $index = $percent;
@@ -383,7 +383,7 @@ namespace tei187\IntensificationGradient;
          * @param boolean $echo Flag. If true, echoes returning void or if false returns HTML. Default false.
          * @return string HTML or echo.
          */
-        public function renderBar(Array $containerAttributes, Array $cellAttributes, Bool $echo = false) : string {
+        public function renderBar(array $containerAttributes, array $cellAttributes, bool $echo = false) : string {
             $contAttr = null;
             foreach($containerAttributes as $attribute => $value) {
                 $contAttr .= " {$attribute}='{$value}'";
@@ -421,7 +421,7 @@ namespace tei187\IntensificationGradient;
          * @param string|null $content Specifies content inside the tag.
          * @return string HTML.
          */
-        public function renderCell(Float $percent, String $tag = "div", $cellAttributes = null, String $content = null) : string {
+        public function renderCell(float $percent, string $tag = "div", $cellAttributes = null, ?string $content = null) : string {
             $percentRnd = round($percent);
             $cellAttr = null;
             if(is_array($cellAttributes)) {

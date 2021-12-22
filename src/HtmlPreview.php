@@ -19,7 +19,7 @@ Class HtmlPreview {
      * @param string|null $title Title to display in TITLE and H1 tags.
      * @param Generator|array|string|null $range Gradient range as a Generator object or returned arrays.
      */
-    function __construct(string $title = null, $range = null) {
+    function __construct(?string $title = null, $range = null) {
         if(!is_null($range)) $this->setRange($range);
         if(!is_null($title)) $this->setTitle($title);
     }
@@ -145,7 +145,7 @@ Class HtmlPreview {
      * @param string|null $title Title to set.
      * @return HtmlPreview
      */
-    public function setTitle(string $title = null) : HtmlPreview {
+    public function setTitle(?string $title = null) : HtmlPreview {
         $this->title = strlen(trim($title)) > 0 && !is_null($title) ? trim($title) : null;
         return $this;
     }

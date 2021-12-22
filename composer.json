@@ -1,0 +1,29 @@
+{
+    "name": "tei187/intensification-gradient",
+    "type": "library",
+    "description": "IntensificationGradient is a PHP class used to generate a decimal-step-based RGBa gradient data arrays, based on defined stops. Especially usefull with intensification displays (like ticks per hour, visits per day, etc.) or compositions based on gradient range of limiting colors (brand guides, etc.).",
+    "homepage": "https://github.com/tei187/IntensificationGradient",
+    "license": "MIT",
+    "keywords": [
+        "generator", "gradient", "html-output", "color-gradient", "gradient-generator", "rgba-color", "hex-color", "intensification"
+    ],
+    "autoload": {
+        "psr-4": {
+            "tei187\\IntensificationGradient\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "tei187",
+            "email": "bonk.piotr@gmail.com",
+            "role": "developer"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "php": ">=7.0"
+    },
+    "config": {
+        "sort-packages": true
+    }
+}
