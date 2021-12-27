@@ -378,20 +378,24 @@ namespace tei187\IntensificationGradient;
         /**
          * Renders entire gradient bar.
          *
-         * @param array $containerAttributes Array with container attributes.
-         * @param array $cellAttributes Array with cell attributes.
+         * @param array|null $containerAttributes Array with container attributes.
+         * @param array|null $cellAttributes Array with cell attributes.
          * @param boolean $echo Flag. If true, echoes returning void or if false returns HTML. Default false.
          * @return string HTML or echo.
          */
-        public function renderBar(array $containerAttributes, array $cellAttributes, bool $echo = false) : string {
+        public function renderBar(?array $containerAttributes = null, ?array $cellAttributes = null, bool $echo = false) : string {
             $contAttr = null;
-            foreach($containerAttributes as $attribute => $value) {
-                $contAttr .= " {$attribute}='{$value}'";
+            if(is_array($containerAttributes)) {
+                foreach($containerAttributes as $attribute => $value) {
+                    $contAttr .= " {$attribute}='{$value}'";
+                }
             }
 
             $cellAttr = null;
-            foreach($cellAttributes as $attribute => $value) {
-                $cellAttr .= " {$attribute}='{$value}'";
+            if(is_array($cellAttributes)) {
+                foreach($cellAttributes as $attribute => $value) {
+                    $cellAttr .= " {$attribute}='{$value}'";
+                }
             }
 
             $html = null;
@@ -417,21 +421,40 @@ namespace tei187\IntensificationGradient;
          *
          * @param float $percent Specifies which percent to represent (rounds to Decimal).
          * @param string $tag Specifies which tag to render.
-         * @param string|array $cellAttributes Specifies which attributes should the tag have.
+         * @param string|array|null $cellAttributes Specifies which attributes should the tag have.
          * @param string|null $content Specifies content inside the tag.
          * @return string HTML.
          */
         public function renderCell(float $percent, string $tag = "div", $cellAttributes = null, ?string $content = null) : string {
             $percentRnd = round($percent);
             $cellAttr = null;
+            $foundStyle = false;
             if(is_array($cellAttributes)) {
+                if(key_exists("style", $cellAttributes)) {
+                    $cellAttributes["style"] .= "; background-color: {$this->result($percentRnd)}";
+                    $foundStyle = true;
+                }
                 foreach($cellAttributes as $attribute => $value) {
                     $cellAttr .= " {$attribute}='{$value}'";
                 }
             } elseif (is_string($cellAttributes)) {
+                if(strpos($cellAttributes, "style='") !== false) {
+                    $cellAttributes = str_replace("style='", "style='background-color: {$this->result($percentRnd)}; ", $cellAttributes);
+                    $foundStyle = true;
+                } 
+                if(strpos($cellAttributes, "style=\"") !== false) {
+                    $cellAttributes = str_replace("style=\"", "style=\"background-color: {$this->result($percentRnd)}; ", $cellAttributes);
+                    $foundStyle = true;
+                }
                 $cellAttr = " ".$cellAttributes;
             }
-            return "<{$tag} {$cellAttr} style='background-color: {$this->result($percentRnd)}'>{$content}</{$tag}>";
+            
+            if($foundStyle) {
+                $style = null;
+            } else {
+                $style = "style='background-color: {$this->result($percentRnd)}'";
+            }
+            return "<{$tag} {$cellAttr} {$style}>{$content}</{$tag}>";
         }
 
         /**
