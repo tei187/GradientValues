@@ -31,6 +31,11 @@ Search.appendIndex(
             "summary": "Zero\u0020out\u0020properties.",
             "url": "classes/tei187-IntensificationGradient-Generator.html#method_zeroVariables"
         },                {
+            "fqsen": "\\tei187\\IntensificationGradient\\Generator\u003A\u003AreturnDefaultGradients\u0028\u0029",
+            "name": "returnDefaultGradients",
+            "summary": "Returns\u0020names\u0020of\u0020default\u0020preset\u0020gradients.",
+            "url": "classes/tei187-IntensificationGradient-Generator.html#method_returnDefaultGradients"
+        },                {
             "fqsen": "\\tei187\\IntensificationGradient\\Generator\u003A\u003AcheckValue\u0028\u0029",
             "name": "checkValue",
             "summary": "Check\u0020values\u0020validity.\u0020Return\u0020true\u0020if\u0020check\u0020fine,\u0020false\u0020if\u0020failed.",

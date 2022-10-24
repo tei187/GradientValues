@@ -59,6 +59,11 @@ $prev = new HtmlPreview("Testing", $gen->returnArray(true)); // pass to HtmlPrev
 echo $prev->buildPage();
 ```
 
+### Default gradients
+List of default preset gradients:
+
+![List of default gradients](https://xowergs.wirt16.bhlink.pl/stuff/IntensificationGradient_defaults.jpg)
+
 
 ## Requirements
 - PHP >= 7.3
